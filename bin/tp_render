@@ -1,0 +1,17 @@
+#!/usr/bin/perl -w
+
+use Template;
+
+
+my $tt = Template->new({
+    INCLUDE_PATH => '/usr/local/templates',
+    INTERPOLATE  => 0,
+    EVAL_PERL    => 1,
+    POST_CHOMP   => 0,
+}) || die "$Template::ERROR\n";
+
+
+$tt->process( \*STDIN, \%ENV)
+    || die $tt->error(), "\n";
+
+

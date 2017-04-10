@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+
+  java:
+    container_name: dmx-java
+    image: dimajix/java:latest
+    build: 
+      context: .
+      args:
+        http_proxy: ${http_proxy}
+        https_proxy: ${https_proxy}
+    command: bash
+
+
+networks:
+  default:
+    external:
+      name: dimajix
+
