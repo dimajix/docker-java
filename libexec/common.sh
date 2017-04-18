@@ -22,6 +22,17 @@ render_templates() {
 }
 
 
+check_dirs() {
+    for d in $(echo $1 | tr "," "\n"); do
+        if [ ! -d $d ]; then
+            return 1
+        fi
+    done
+
+    return 0
+}
+
+
 check_java() {
     if [ $(pidof java | wc -w) -eq 0 ]; then
 	    echo "ERROR: Java process not started" >> /dev/stderr
