@@ -15,7 +15,7 @@ RUN locale-gen en_US.UTF-8 \
 # Upgrade all packages
 RUN apt-get update \
     && apt-get -y upgrade \
-    && apt-get install -y curl tar sudo rsync zlib1g-dev zlib1g gettext libtemplate-perl
+    && apt-get install -y --no-install-recommends curl tar zlib1g-dev zlib1g libtemplate-perl ca-certificates
 
 # Install Java
 RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee /etc/apt/sources.list.d/webupd8team-java.list \
@@ -23,7 +23,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 \
     && apt-get update
 RUN echo oracle-java${BUILD_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \ 
-    && apt-get install -y oracle-java${BUILD_JAVA_VERSION}-installer oracle-java${BUILD_JAVA_VERSION}-set-default \
+    && apt-get install -y --no-install-recommends oracle-java${BUILD_JAVA_VERSION}-installer oracle-java${BUILD_JAVA_VERSION}-set-default \
     && apt-get clean
 
 # Set Java environment
