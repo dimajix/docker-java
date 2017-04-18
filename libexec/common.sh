@@ -6,18 +6,23 @@ envsubst() {
 }
 
 render_templates() {
-    SRC_DIR=$1
-    DST_DIR=$2
+    local SRC_DIR=$1
+    local DST_DIR=$2
 
     mkdir -p $DST_DIR
 
     for f in $SRC_DIR/*
     do
-      src_name=$f
-      dst_name=$DST_DIR/$(basename $f)
-      echo $src_name "=>" $dst_name
-      # take action on each file. $f store current file name
-      tp_render < $src_name > $dst_name
+        local src_name=$f
+        local dst_name=$DST_DIR/$(basename $f)
+        if [ -d $src_name ]; then
+            mkdir -p $dst_name
+            render_templates $src_name $dst_name
+        else
+            echo $src_name "=>" $dst_name
+            # take action on each file. $f store current file name
+            tp_render < $src_name > $dst_name
+        fi
     done
 }
 
