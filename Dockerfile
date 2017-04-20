@@ -5,17 +5,17 @@ ARG BUILD_JAVA_VERSION=8
 
 USER root
 
+# Upgrade all packages
+RUN apt-get update \
+    && apt-get -y upgrade \
+    && apt-get install -y --no-install-recommends curl tar zlib1g-dev zlib1g libtemplate-perl ca-certificates locales
+
 # Users with other locales should set this in their derivative image
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 RUN locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8
-
-# Upgrade all packages
-RUN apt-get update \
-    && apt-get -y upgrade \
-    && apt-get install -y --no-install-recommends curl tar zlib1g-dev zlib1g libtemplate-perl ca-certificates
 
 # Install Java
 RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee /etc/apt/sources.list.d/webupd8team-java.list \
@@ -24,7 +24,8 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | te
     && apt-get update
 RUN echo oracle-java${BUILD_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \ 
     && apt-get install -y --no-install-recommends oracle-java${BUILD_JAVA_VERSION}-installer oracle-java${BUILD_JAVA_VERSION}-set-default \
-    && apt-get clean
+    && apt-get clean \
+    && rm -rf /var/cache/oracle-jdk8-installer
 
 # Set Java environment
 ENV JAVA_HOME=/usr/lib/jvm/java-${BUILD_JAVA_VERSION}-oracle
