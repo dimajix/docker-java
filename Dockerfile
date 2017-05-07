@@ -1,34 +1,35 @@
-FROM ubuntu:16.04
+FROM debian:8.7
 MAINTAINER k.kupferschmidt@dimajix.de
 
-ARG BUILD_JAVA_VERSION=8
+ARG JAVA_VERSION_MAJOR=8
+ARG JAVA_VERSION_MINOR=131
+ARG JAVA_VERSION_BUILD=11
+ARG JAVA_PACKAGE=server-jre
 
 USER root
 
 # Upgrade all packages
 RUN apt-get update \
     && apt-get -y upgrade \
-    && apt-get install -y --no-install-recommends curl tar zlib1g-dev zlib1g libtemplate-perl ca-certificates locales
+    && apt-get install -y --no-install-recommends curl tar libtemplate-perl ca-certificates locales \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Users with other locales should set this in their derivative image
-ENV LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8
-RUN locale-gen en_US.UTF-8 \
-    && update-locale LANG=en_US.UTF-8
+ENV LANG=C.UTF-8 \
+    LANGUAGE=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    JAVA_HOME=/opt/java
+RUN locale-gen C.UTF-8 \
+    && update-locale LANG=C.UTF-8
 
 # Install Java
-RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee /etc/apt/sources.list.d/webupd8team-java.list \
-    && echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 \
-    && apt-get update
-RUN echo oracle-java${BUILD_JAVA_VERSION}-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \ 
-    && apt-get install -y --no-install-recommends oracle-java${BUILD_JAVA_VERSION}-installer oracle-java${BUILD_JAVA_VERSION}-set-default \
-    && apt-get clean \
-    && rm -rf /var/cache/oracle-jdk8-installer
-
-# Set Java environment
-ENV JAVA_HOME=/usr/lib/jvm/java-${BUILD_JAVA_VERSION}-oracle
+RUN set -ex \
+    && curl -sLH "Cookie: oraclelicense=accept-securebackup-cookie" \
+      http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/d54c1d3a095b4ff2b6607d096fa80163/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
+    | tar xz -C /opt \
+    && ln -s /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR} ${JAVA_HOME} \
+    && ln -s ${JAVA_HOME}/jre/bin ${JAVA_HOME}/bin
 
 # setup environment
 ENV PATH=$PATH:$JAVA_HOME/bin:/opt/docker/bin

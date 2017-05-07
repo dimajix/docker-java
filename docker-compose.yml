@@ -2,16 +2,25 @@ version: "3"
 
 services:
 
-  java:
-    container_name: dmx-java
-    image: dimajix/java:latest
-    build: 
+  jre:
+    container_name: dmx-jre
+    image: dimajix/jre:latest
+    build:
       context: .
       args:
+        JAVA_PACKAGE: server-jre
         http_proxy: ${http_proxy}
         https_proxy: ${https_proxy}
-    command: bash
 
+  jdk:
+    container_name: dmx-jdk
+    image: dimajix/jdk:latest
+    build:
+      context: .
+      args:
+        JAVA_PACKAGE: jdk
+        http_proxy: ${http_proxy}
+        https_proxy: ${https_proxy}
 
 networks:
   default:
