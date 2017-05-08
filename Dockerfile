@@ -5,6 +5,7 @@ ARG JAVA_VERSION_MAJOR=8
 ARG JAVA_VERSION_MINOR=131
 ARG JAVA_VERSION_BUILD=11
 ARG JAVA_PACKAGE=server-jre
+ARG MAVEN_VERSION=3.5.0
 
 USER root
 
@@ -19,7 +20,8 @@ RUN apt-get update \
 ENV LANG=C.UTF-8 \
     LANGUAGE=C.UTF-8 \
     LC_ALL=C.UTF-8 \
-    JAVA_HOME=/opt/java
+    JAVA_HOME=/opt/java \
+    MAVEN_HOME=/opt/maven
 RUN locale-gen C.UTF-8 \
     && update-locale LANG=C.UTF-8
 
@@ -29,7 +31,13 @@ RUN set -ex \
       http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/d54c1d3a095b4ff2b6607d096fa80163/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
     | tar xz -C /opt \
     && ln -s /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR} ${JAVA_HOME} \
-    && ln -s ${JAVA_HOME}/jre/bin ${JAVA_HOME}/bin
+    && ln -s ${JAVA_HOME}/jre/bin ${JAVA_HOME}/bin \
+    && if [ "${JAVA_PACKAGE}" = "jdk" ]; then \
+          curl -sL http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+          | tar xz -C /opt \
+          && ln -s /opt/apache-maven-${MAVEN_VERSION} ${MAVEN_HOME} \
+          && ln -s ${MAVEN_HOME}/bin/mvn /usr/local/bin; \
+    fi
 
 # setup environment
 ENV PATH=$PATH:$JAVA_HOME/bin:/opt/docker/bin

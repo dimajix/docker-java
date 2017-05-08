@@ -4,7 +4,7 @@ services:
 
   jre:
     container_name: dmx-jre
-    image: dimajix/jre:latest
+    image: dimajix/jre:oracle-8
     build:
       context: .
       args:
@@ -14,7 +14,7 @@ services:
 
   jdk:
     container_name: dmx-jdk
-    image: dimajix/jdk:latest
+    image: dimajix/jdk:oracle-8
     build:
       context: .
       args:
