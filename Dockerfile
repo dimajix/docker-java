@@ -12,7 +12,7 @@ USER root
 # Upgrade all packages
 RUN apt-get update \
     && apt-get -y upgrade \
-    && apt-get install -y --no-install-recommends curl tar libtemplate-perl ca-certificates locales \
+    && apt-get install -y --no-install-recommends curl tar libtemplate-perl ca-certificates locales procps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
