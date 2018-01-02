@@ -5,7 +5,7 @@ ARG JAVA_VERSION_MAJOR=8
 ARG JAVA_VERSION_MINOR=151
 ARG JAVA_VERSION_BUILD=12
 ARG JAVA_PACKAGE=server-jre
-ARG MAVEN_VERSION=3.5.0
+ARG MAVEN_VERSION=3.5.2
 
 USER root
 
@@ -33,7 +33,7 @@ RUN set -ex \
     && ln -s /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR} ${JAVA_HOME} \
     && ln -s ${JAVA_HOME}/jre/bin ${JAVA_HOME}/bin \
     && if [ "${JAVA_PACKAGE}" = "jdk" ]; then \
-          curl -sL http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+          curl -svL http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
           | tar xz -C /opt \
           && ln -s /opt/apache-maven-${MAVEN_VERSION} ${MAVEN_HOME} \
           && ln -s ${MAVEN_HOME}/bin/mvn /usr/local/bin; \
