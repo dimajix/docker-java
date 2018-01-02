@@ -1,9 +1,9 @@
-FROM debian:8.7
+FROM debian:9.2
 MAINTAINER k.kupferschmidt@dimajix.de
 
 ARG JAVA_VERSION_MAJOR=8
-ARG JAVA_VERSION_MINOR=131
-ARG JAVA_VERSION_BUILD=11
+ARG JAVA_VERSION_MINOR=151
+ARG JAVA_VERSION_BUILD=12
 ARG JAVA_PACKAGE=server-jre
 ARG MAVEN_VERSION=3.5.0
 
@@ -27,8 +27,8 @@ RUN locale-gen C.UTF-8 \
 
 # Install Java
 RUN set -ex \
-    && curl -sLH "Cookie: oraclelicense=accept-securebackup-cookie" \
-      http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/d54c1d3a095b4ff2b6607d096fa80163/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
+    && curl -svLH "Cookie: oraclelicense=accept-securebackup-cookie" \
+      http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/e758a0de34e24606bca991d704f6dcbf/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
     | tar xz -C /opt \
     && ln -s /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR} ${JAVA_HOME} \
     && ln -s ${JAVA_HOME}/jre/bin ${JAVA_HOME}/bin \
