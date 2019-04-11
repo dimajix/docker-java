@@ -2,10 +2,10 @@ FROM debian:9.2
 MAINTAINER k.kupferschmidt@dimajix.de
 
 ARG JAVA_VERSION_MAJOR=8
-ARG JAVA_VERSION_MINOR=151
-ARG JAVA_VERSION_BUILD=12
+ARG JAVA_VERSION_MINOR=201
+ARG JAVA_VERSION_BUILD=09
 ARG JAVA_PACKAGE=server-jre
-ARG MAVEN_VERSION=3.5.2
+ARG MAVEN_VERSION=3.5.4
 
 USER root
 
@@ -27,13 +27,13 @@ RUN locale-gen C.UTF-8 \
 
 # Install Java
 RUN set -ex \
-    && curl -svLH "Cookie: oraclelicense=accept-securebackup-cookie" \
-      http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/e758a0de34e24606bca991d704f6dcbf/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
+    && curl -sLH "Cookie: oraclelicense=accept-securebackup-cookie" \
+      https://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/42970487e3af4f5aa5bca3f542482c60/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
     | tar xz -C /opt \
     && ln -s /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR} ${JAVA_HOME} \
     && ln -s ${JAVA_HOME}/jre/bin ${JAVA_HOME}/bin \
     && if [ "${JAVA_PACKAGE}" = "jdk" ]; then \
-          curl -svL http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+          curl -sL http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
           | tar xz -C /opt \
           && ln -s /opt/apache-maven-${MAVEN_VERSION} ${MAVEN_HOME} \
           && ln -s ${MAVEN_HOME}/bin/mvn /usr/local/bin; \
